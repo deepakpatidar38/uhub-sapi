@@ -67,7 +67,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 output application/json
 ---
 {
-	message : "Rail with ID" ++ attributes.uriParams.id as String default '' ++ "has been deleted"
+	message : "Bogey with ID" ++ attributes.uriParams.id as String default '' ++ "has been deleted"
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
