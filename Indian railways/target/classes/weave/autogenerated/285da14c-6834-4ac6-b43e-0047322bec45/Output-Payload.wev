@@ -1,0 +1,14 @@
+%dw 2.0
+
+type auto_285da14c_6834_4ac6_b43e_0047322bec45_Output_Payload = {
+  ToStation: String, 
+  Number: Number, 
+  FromStation: String, 
+  Price: Number, 
+  Class: String, 
+  ID?: Number, 
+  Date: String, 
+  Name: String, 
+  _?: Any
+}
+
