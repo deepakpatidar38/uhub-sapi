@@ -21,7 +21,7 @@ pipeline {
   	CLIENT_SECRET = credentials('TEST_CLIENT_SECRET')
   }
       steps {
-         bat 'mvn -U -V -e -B %M2SETTINGS% -DskipTests deploy -DmuleDeploy -Danypoint.username="%ANYPOINT_CREDS_USR%" -Danypoint.password="%ANYPOINT_CREDS_PSW%" -Danypoint.platform.client_id="%CLIENT_ID%" -Danypoint.platform.client_secret="%CLIENT_SECRET%"' 
+         bat 'mvn -U -V -e -B %M2SETTINGS% -DskipTests deploy -Ptest -DmuleDeploy -Danypoint.username="%ANYPOINT_CREDS_USR%" -Danypoint.password="%ANYPOINT_CREDS_PSW%" -Danypoint.platform.client_id="%CLIENT_ID%" -Danypoint.platform.client_secret="%CLIENT_SECRET%"' 
       }
     }
   }
