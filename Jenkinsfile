@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Test') { 
       steps {
-        echo '*************** Test execution completed****************
+        echo '*************** Test execution completed****************'
       }
     }
     stage('Deployment') { 
