@@ -9,7 +9,11 @@ pipeline {
         bat 'mvn -B -U -e -V clean -gs %M2SETTINGS% -DskipTests package'
       }
     }
+<<<<<<< HEAD
     stage('Test') { 
+=======
+    stage('Test') { 
+>>>>>>> 03341c3c41ca6df871f691f3e83a8bd43f359105
       steps {
         echo '*************** Test execution completed****************'
       }
