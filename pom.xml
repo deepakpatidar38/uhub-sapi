@@ -154,6 +154,7 @@
 			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
 			<artifactId>uhub-sapi</artifactId>
 			<version>1.0.1</version>
+			<packaging>pom</packaging>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
