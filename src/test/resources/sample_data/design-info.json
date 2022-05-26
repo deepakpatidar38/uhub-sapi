@@ -1,13 +1,14 @@
 {
   "sampleData": {
-    "8f39a467-1fc6-4167-8fbc-56f7a37604cd": {
-      "payload": "sample_data/list_java_2.dwl"
-    },
-    "56951938-4670-4f21-9868-35f544e08e7e": {
-      "payload": "sample_data/list_java_1.dwl"
-    },
-    "8d5bbffc-0bf0-4ac4-9c62-f3fd923e66f1": {
+    "09628562-4ace-475c-b2f9-b714e2ebde94": {
       "payload": "sample_data/list_java.dwl"
+    },
+    "77d0b131-2cae-42f0-86d6-e72a2a09a371": {
+      "vars-covidCasePayload": "sample_data/java.dwl",
+      "payload": "sample_data/StatementResult_1.dwl"
+    },
+    "fad3246a-9c2f-457b-b9d8-34f792c9d890": {
+      "payload": "sample_data/statementresult.dwl"
     }
   }
 }

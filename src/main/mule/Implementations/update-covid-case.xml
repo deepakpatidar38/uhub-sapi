@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="put:\cases:application\json:uhub-sapi-config">
+        <set-variable value="#[attributes.headers.'x-correlation-id' default '']" doc:name="Set correlationId" doc:id="4a9fdec5-b93e-4bd9-9aa5-67722e732ff5" variableName="correlationId" />
+		<ee:transform doc:name="Transform Message" doc:id="cc4f62db-69f6-461d-9099-5363aacf3815">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="covidCasePayload" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	case_id: payload.caseID,
+	source: payload.source,
+	case_type: payload.caseType,
+	first_name: payload.firstName,
+	last_name: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	date_of_birth: payload.dateOfBirth as String {format: "yyyy-MM-dd"},
+	national_id: payload.nationalID,
+	national_id_type: payload.nationalIDType,
+	street_address: payload.address.streetAddress,
+	city: payload.address.city,
+	state: upper(payload.address.state),
+	postal: payload.address.postal,
+	country: payload.address.country,
+	update_date: now() as String {format: "yyyy-MM-dd"},
+	create_by: "UHIS",
+	update_by: "UHIS"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Update Case by ID" doc:id="da1b29be-d362-428d-b86b-a1ec3268577d" name="update-covid-case-sub-flow"/>
+		<ee:transform doc:id="77d0b131-2cae-42f0-86d6-e72a2a09a371">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.affectedRows > 0){
+	caseID: vars.covidCasePayload.case_id
+} else {}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    
+</flow>
+	</mule>

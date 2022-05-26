@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_48a062cf_6c98_44e5_a1fa_6df18b77b24b_Output_Variables_TransID = Any
+

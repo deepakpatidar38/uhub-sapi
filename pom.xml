@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mycompany</groupId>
-	<artifactId>indianrailways</artifactId>
+	<artifactId>uhub-sapi</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
-	<name>indianrailways</name>
+	<name>uhub-sapi</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,9 +17,37 @@
 
 		<app.runtime>4.4.0-20220221</app.runtime>
 		<mule.maven.plugin.version>3.5.4</mule.maven.plugin.version>
-		<munit.version>2.3.9</munit.version>
 	</properties>
 	<profiles>
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mule.tools.maven</groupId>
+						<artifactId>mule-maven-plugin</artifactId>
+						<version>${mule.maven.plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<cloudHubDeployment>
+								<applicationName>uhub-sapi-dev-application</applicationName>
+								<environment>Dev</environment>
+								<region>us-east-1</region>
+								<workers>1</workers>
+								<workerType>MICRO</workerType>
+								<properties>
+									<env>dev</env>
+									<api.id>17859491</api.id>
+									<enc.key>abcdefghijklmnop</enc.key>
+									<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
+									<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
+								</properties>
+							</cloudHubDeployment>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>test</id>
 			<build>
@@ -31,42 +59,15 @@
 						<extensions>true</extensions>
 						<configuration>
 							<cloudHubDeployment>
-								<applicationName>Indianrailways-api-test</applicationName>
+								<applicationName>uhub-sapi-test-application</applicationName>
 								<environment>Test</environment>
 								<region>us-east-1</region>
 								<workers>1</workers>
 								<workerType>MICRO</workerType>
 								<properties>
 									<env>test</env>
-									<api.id>17826517</api.id>
-									<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
-									<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
-								</properties>
-							</cloudHubDeployment>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.mule.tools.maven</groupId>
-						<artifactId>mule-maven-plugin</artifactId>
-						<version>${mule.maven.plugin.version}</version>
-						<extensions>true</extensions>
-						<configuration>
-							<cloudHubDeployment>
-								<applicationName>Indianrailways-api-Production</applicationName>
-								<environment>Prod</environment>
-								<region>us-east-1</region>
-								<workers>1</workers>
-								<workerType>MICRO</workerType>
-								<properties>
-									<env>prod</env>
-									<api.id>17826511</api.id>
+									<api.id>17859577</api.id>
+									<enc.key>abcdefghijklmnop</enc.key>
 									<anypoint.platform.client_id>${anypoint.platform.client_id}</anypoint.platform.client_id>
 									<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
 								</properties>
@@ -84,24 +85,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<failIfNoTests>false</failIfNoTests>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.mulesoft.munit.tools</groupId>
-				<artifactId>munit-maven-plugin</artifactId>
-				<version>${munit.version}</version>
-				<executions>
-					<execution>
-						<id>test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.mule.tools.maven</groupId>
@@ -109,47 +92,23 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
+					<cloudHubDeployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<muleVersion>4.4.0</muleVersion>
+						<username>${username}</username>
+						<password>${password}</password>
+						<objectStoreV2>true</objectStoreV2>
+						<properties>
+							<anypoint.platform.base_uri>https://anypoint.mulesoft.com/</anypoint.platform.base_uri>
+							<anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com/</anypoint.platform.analytics_base_uri>
+						</properties>
+					</cloudHubDeployment>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>mysql</groupId>
 							<artifactId>mysql-connector-java</artifactId>
 						</sharedLibrary>
 					</sharedLibraries>
-					<cloudHubDeployment>
-						<uri>https://anypoint.mulesoft.com</uri>
-						<muleVersion>4.4.0</muleVersion>
-						<username>${username}</username>
-						<password>${password}</password>
-						<properties>
-							<http.port>8081</http.port>
-							<anypoint.platform.base_uri>https://anypoint.mulesoft.com</anypoint.platform.base_uri>
-							<anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
-						</properties>
-						<objectStoreV2>true</objectStoreV2>
-					</cloudHubDeployment>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.mulesoft.munit.tools</groupId>
-				<artifactId>munit-maven-plugin</artifactId>
-				<version>${munit.version}</version>
-				<executions>
-					<execution>
-						<id>test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-							<goal>coverage-report</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<coverage>
-						<runCoverage>true</runCoverage>
-						<formats>
-							<format>html</format>
-						</formats>
-					</coverage>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -169,16 +128,15 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
-			<artifactId>train</artifactId>
-			<version>1.0.2</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
 			<groupId>org.mule.modules</groupId>
 			<artifactId>mule-apikit-module</artifactId>
 			<version>1.5.11</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.modules</groupId>
+			<artifactId>mule-secure-configuration-property-module</artifactId>
+			<version>1.2.3</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
@@ -193,24 +151,11 @@
 			<version>8.0.29</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mulesoft.munit</groupId>
-			<artifactId>munit-runner</artifactId>
-			<version>2.3.9</version>
-			<classifier>mule-plugin</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.mulesoft.munit</groupId>
-			<artifactId>munit-tools</artifactId>
-			<version>2.3.9</version>
-			<classifier>mule-plugin</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.weave</groupId>
-			<artifactId>assertions</artifactId>
-			<version>1.0.2</version>
-			<scope>test</scope>
+			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
+			<artifactId>uhub-sapi</artifactId>
+			<version>1.0.1</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 

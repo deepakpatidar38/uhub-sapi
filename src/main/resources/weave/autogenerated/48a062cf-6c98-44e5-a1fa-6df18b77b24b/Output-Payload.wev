@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_48a062cf_6c98_44e5_a1fa_6df18b77b24b_Output_Payload = {|
+  message: String, 
+  Description: Array<String> | Null, 
+  dateTime: String {"format": "yyyy-MM-dd'T'HH:mm:ss'Z'"}, 
+  transactionID: Null
+|}
+

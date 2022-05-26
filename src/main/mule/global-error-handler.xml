@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="global-error-handler">
+		<on-error-propagate type="APIKIT:BAD_REQUEST">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="31fc230d-6753-4200-882f-944f72211058" variableName="TransID"/>
+			<set-variable value="400" doc:name="Set http Status 400" doc:id="3034fa45-9698-4960-b4cb-f07dbb95c8fe" variableName="httpStatus"/>
+			<set-variable value="Bad Request" doc:name="Error Message" doc:id="6b7d681d-dee1-4df9-bcdb-5113cd0dc8d5" variableName="errorMessage"/>
+			<set-variable value='#[error.description default ""]' doc:name="Set error descritption" doc:id="a7e33cd3-2e07-4334-9937-ea01eaabc82f" variableName="errorDescription"/>
+			<ee:transform doc:name="Transform Message" doc:id="07505a6e-4ebb-4b3c-8eb8-d3a383edc092" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="errorDescribe" ><![CDATA[%dw 2.0
+output application/java
+---
+(vars.errorDescription replace "[" with "" replace "]" with "") splitBy "\n"]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="Global error message" doc:id="82295936-f002-4d7d-bd89-2a68c645084f" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_FOUND">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="0dc1d287-6365-401f-96ff-3ccf284d7752" variableName="TransID" />
+			<set-variable value="404" doc:name="Set https status 404" doc:id="8219bc1f-06d6-47e0-8ed5-7d1b53e06a9b" variableName="httpStatus"/>
+			<set-variable value="Resource Not Found" doc:name="Set error message" doc:id="fa896a27-5bb6-4863-bfc6-c9c0e75bf3f4" variableName="errorMessage"/>
+			<set-variable value="The server has not found anything matching the Request-URI" doc:name="Set error Description" doc:id="716de3e8-b0f5-417a-9aa8-a8a6e7e347ab" variableName="errorDescription"/>
+			<flow-ref doc:name="Global-error-message" doc:id="cc5dc043-8a51-4715-b4fb-271910a39c42" name="global-error-handlerSub_Flow"/>
+		
+</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:METHOD_NOT_ALLOWED">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="d67f1942-6144-4809-b2b6-23f8dfb43a7f" variableName="TransID" />
+			<set-variable value="405" doc:name="Set https status 405" doc:id="3f83a5c5-fcb6-4c1f-8112-302b1dfea126" variableName="httpStatus" />
+			<set-variable value="Method not alowed" doc:name="Set error message" doc:id="7cd53f41-2b1c-4219-a76e-dc2d3cbe8e39" variableName="errorMessage" />
+			<set-variable value="The method specified in the request is not allowed for this resource" doc:name="Set error Description" doc:id="584beb40-9a9f-4e6d-a8fc-7431ffd5dc60" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="85dfaeeb-d17b-4048-88c9-beeb9848d650" name="global-error-handlerSub_Flow" />
+		
+</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="5e29c0aa-43ee-4e6c-b8b9-f3dc9476fdc0" variableName="TransID" />
+			<set-variable value="406" doc:name="Set https status 405" doc:id="343452b3-fae5-459a-9187-46bff80dff58" variableName="httpStatus" />
+			<set-variable value="Not Acceptable" doc:name="Set error message" doc:id="9a15b180-bf7e-4b34-a4a3-2ce8316ab3f2" variableName="errorMessage" />
+			<set-variable value="TThe resource identified by the request is not capable of generating response entities according to the request accept header" doc:name="Set error Description" doc:id="d10a14f3-1602-4582-ba3c-d887cc6d2df7" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="bfc763ec-ed42-4d9b-9ab3-8fa0866cb131" name="global-error-handlerSub_Flow" />
+		
+</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="ac0b8780-68ea-4d06-b519-aeedd38bd7af" variableName="TransID" />
+			<set-variable value="415" doc:name="Set https status 415" doc:id="872bd823-b55e-4e34-a4a6-fef8143171dd" variableName="httpStatus" />
+			<set-variable value="Unsupported Media Type" doc:name="Set error message" doc:id="98466d4a-76fa-435a-adfb-367fec7d427a" variableName="errorMessage" />
+			<set-variable value="The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method" doc:name="Set error Description" doc:id="5a5ef3c5-3f3b-421f-be79-9595fc9240a5" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="1bcd26d9-58fa-4694-b430-840fde87884c" name="global-error-handlerSub_Flow" />
+		
+</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="f091f83d-6bac-4e5d-8a4b-da509dc05887" variableName="TransID" />
+			<set-variable value="400" doc:name="Set https status 400" doc:id="48bb47df-66aa-4894-a7cb-cf4bd339e6a1" variableName="httpStatus" />
+			<set-variable value="API method not implemented" doc:name="Set error message" doc:id="61cd6116-7c70-43d2-ba79-c606a3d1b5b1" variableName="errorMessage" />
+			<set-variable value="The API method used in request is not implemented" doc:name="Set error Description" doc:id="1f96b6f6-ae13-4543-a60b-69e75fcbe348" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="5016bdd4-b5ec-4929-993c-b7816162a902" name="global-error-handlerSub_Flow" />
+		
+</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c4b3fc50-5dba-4cfe-b410-925d86b94178" type="HTTP:BAD_REQUEST">
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="8e0a1003-7519-40de-a302-307b983e84b8" variableName="TransID" />
+			<set-variable value="400" doc:name="Set http Status 400" doc:id="cb685dae-431f-448b-9e16-e55a93b09364" variableName="httpStatus" />
+			<set-variable value="Bad Request" doc:name="Error Message" doc:id="24908fb1-bbce-4039-81f7-75feabca1668" variableName="errorMessage" />
+			<set-variable value='#[error.description default ""]' doc:name="Set error descritption" doc:id="6ae387c6-fdbe-4c11-94a1-9e5b5103f0fd" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="92b5a1e6-5b2e-4198-8599-7504923fb605" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="errorDescribe" ><![CDATA[%dw 2.0
+output application/java
+---
+(vars.errorDescription replace "[" with "" replace "]" with "") splitBy "\n"]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="Global error message" doc:id="01216e60-6ec0-4447-9968-4f9acc73e7db" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0f3c7de4-2047-47a3-97b8-cc89051a0867" type="HTTP:NOT_FOUND" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="41fe6a53-43a4-45ea-a418-d5add7656d83" variableName="TransID" />
+			<set-variable value="404" doc:name="https status 404" doc:id="28904935-a8d2-4682-927c-28335cf97c42" variableName="httpStatus" />
+			<set-variable value="Resource Not Found" doc:name="Set error message" doc:id="7a807bd0-5928-4101-85e3-788b98df625a" variableName="errorMessage" />
+			<set-variable value="The server has not found anything matching the Request-URI" doc:name="Set error Description" doc:id="d19b4862-8efa-4e69-90dc-f7a52b190637" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="9ad5aadc-9331-453e-a7b8-40135008e572" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b4b492ba-3694-4e13-9eed-d16e746935ee" type="HTTP:FORBIDDEN" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="2672adfb-93a8-4c03-bee7-10d433743d81" variableName="TransID" />
+			<set-variable value="403" doc:name="https status 403" doc:id="bff582c0-1b37-43be-9bed-1bcdd0d1fa1c" variableName="httpStatus" />
+			<set-variable value="Forbidden Request" doc:name="Set error message" doc:id="88e316c0-ce12-4549-bcc1-ce0569c48545" variableName="errorMessage" />
+			<set-variable value="Access to the upstream service is forbidden." doc:name="Set error Description" doc:id="b78b6ac0-a0dd-4733-96a2-13afd51a9a9e" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="aaa217c3-5d8d-4117-b16e-eb9022502ee8" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d56ad4f5-671a-4cfa-8f3c-d7d2f11bde73" type="HTTP:CLIENT_SECURITY" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="fd3ff9a1-c6cb-41cc-91cc-2a2325140caf" variableName="TransID" />
+			<set-variable value="401" doc:name="https status 401" doc:id="de07fc5f-fad9-4548-a25d-a8c7d6869976" variableName="httpStatus" />
+			<set-variable value="Unauthorized" doc:name="Set error message" doc:id="9427f42b-1deb-45cd-aae4-5de6a00b6159" variableName="errorMessage" />
+			<set-variable value="#[error.muleMessage.payload]" doc:name="Set error Description" doc:id="779bada9-2452-4e48-ad72-8558a224d362" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="843092b0-f2ef-424f-860d-db516f3d4262" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d406ac57-e181-4138-b77c-d76df2fb8649" type="HTTP:CONNECTIVITY" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="f15da731-b089-40ea-9932-2d12283dd14b" variableName="TransID" />
+			<set-variable value="500" doc:name="https status 500" doc:id="e4134d6d-0a20-478d-854f-8e5103f611c2" variableName="httpStatus" />
+			<set-variable value="Connection refused" doc:name="Set error message" doc:id="dd04c507-8f0a-416f-b3e4-afacf7a49ec2" variableName="errorMessage" />
+			<set-variable value="The (upstream) service is temporarily not available " doc:name="Set error Description" doc:id="7d965aa1-e9c6-4431-bd0b-3c52db9c3002" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="1f82a60f-ce30-449a-920b-070d2bebeded" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1621205a-29e1-486d-9793-4a5a4ce7667d" type="DB:CANNOT_REACH" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="af03e1f4-a510-4c52-b9c3-b1f1a22444a2" variableName="TransID" />
+			<set-variable value="500" doc:name="https status 500" doc:id="c70edf0b-6e64-4c34-8810-5129875cd3c3" variableName="httpStatus" />
+			<set-variable value="Connection refused" doc:name="Set error message" doc:id="3ac8ed41-3c11-4800-9c50-932d31517fc3" variableName="errorMessage" />
+			<set-variable value="The (upstream) service is temporarily not available. Database unreachable" doc:name="Set error Description" doc:id="f1860019-0801-4d1f-8782-4922dedaf4a3" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="927c8c3d-2bec-4dc9-869a-3becca418e7b" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="01e8a40d-afaf-410a-b0b3-373d29c5f9e6" type="HTTP:INTERNAL_SERVER_ERROR" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="305921df-5f58-4db9-9fda-8556f0331474" variableName="TransID" />
+			<set-variable value="500" doc:name="https status 500" doc:id="65010cc9-2f58-45dd-a0a8-b17ec35cf6b2" variableName="httpStatus" />
+			<set-variable value="Connection refused" doc:name="Set error message" doc:id="761c0782-0433-4097-b8b5-74104bb2f8a7" variableName="errorMessage" />
+			<set-variable value="The (upstream) service is temporarily not available " doc:name="Set error Description" doc:id="8a9fe36d-fa74-404d-946a-7ceebbd2aab5" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="42c97c1c-4275-4a73-86c3-5128d90a7104" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="2430152b-2f6c-4240-85b1-2e9a202e6ae3" type="HTTP:METHOD_NOT_ALLOWED" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="43cab644-c269-457e-80a9-bc5b43a18fc4" variableName="TransID" />
+			<set-variable value="405" doc:name="https status 405" doc:id="f99414a0-27ed-44b5-a531-ac7e394dcf84" variableName="httpStatus" />
+			<set-variable value="Method Not Allowed" doc:name="Set error message" doc:id="6bd5a8b6-c96c-40cf-b95a-e50d2d89aa69" variableName="errorMessage" />
+			<set-variable value="The method specified in the request is not allowed for this resource" doc:name="Set error Description" doc:id="1c4d499c-c24f-49eb-8e24-e77fa1267562" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="f3f0a6d4-b824-4a28-be74-4f9cf6cad7d5" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="17d01702-4d91-4293-8424-0a27c0ff5309" type="HTTP:UNAUTHORIZED" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="84fc0cec-9e1d-4ab4-991e-811d1bddd98a" variableName="TransID" />
+			<set-variable value="401" doc:name="https status 401" doc:id="8ada3973-06c1-45f6-bcee-c6b41ac9feec" variableName="httpStatus" />
+			<set-variable value="Unauthoried Request" doc:name="Set error message" doc:id="689e8534-2f08-4cd6-9a29-2f0a4a06e91c" variableName="errorMessage" />
+			<set-variable value="Authorization failed" doc:name="Set error Description" doc:id="f63d735e-e670-4faa-8900-e4b33e480735" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="4af8be36-4bc6-464f-b3d2-754639e201ea" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a48a3c06-df93-4140-9771-8ce00f5e273f" type="HTTP:NOT_ACCEPTABLE" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="5c09f21a-24e8-4153-adbe-a86d54a7b0a2" variableName="TransID" />
+			<set-variable value="406" doc:name="https status 406" doc:id="f225e519-834a-474f-9e21-fb5f4aa7f465" variableName="httpStatus" />
+			<set-variable value="Not Acceptable" doc:name="Set error message" doc:id="b2e234d3-6271-4a60-9763-4b59d22c162d" variableName="errorMessage" />
+			<set-variable value="The resource identified by the request is not capable of generating response entities according to the request accept headers" doc:name="Set error Description" doc:id="523ed964-6f0d-4b0a-bac0-7b3217c6a404" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="bc8474e8-354e-4247-b855-f8b40434e0ed" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9f4e23b9-99e4-487c-8962-4953a59282cd" type="HTTP:TIMEOUT" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="de7b1d73-5abb-4d60-974c-0be52142f05a" variableName="TransID" />
+			<set-variable value="408" doc:name="https status 408" doc:id="58cd9419-4b3a-42a0-8f59-d9f0ca619b9e" variableName="httpStatus" />
+			<set-variable value="Request Timeout" doc:name="Set error message" doc:id="bcacf7c3-6b5f-424a-a092-57aa03f11d79" variableName="errorMessage" />
+			<set-variable value="Request has been reached to the accepted timeout set." doc:name="Set error Description" doc:id="eb91df4a-77c2-47d2-a270-a604d50f2b63" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="415949bb-7f55-455a-bc3b-3fbec632c9c0" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d723b7dd-874b-4e9b-9838-bbcd57e97862" type="HTTP:UNSUPPORTED_MEDIA_TYPE" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="765c4e02-febf-49c1-9d45-236a26e32fc8" variableName="TransID" />
+			<set-variable value="415" doc:name="https status 415" doc:id="e488daa6-38ef-4c81-b584-1fcd999c2bc2" variableName="httpStatus" />
+			<set-variable value="Unsupported media type" doc:name="Set error message" doc:id="1f367b41-427b-4e4b-819e-93de337f61a7" variableName="errorMessage" />
+			<set-variable value="The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method" doc:name="Set error Description" doc:id="e95513c8-f265-4195-8acf-49ceb8c65945" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="863576dd-7029-434b-9ad9-5a0b9f68da5d" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cf73a1a8-7b6c-4117-be2d-aa1e34372a77" type="HTTP:TOO_MANY_REQUESTS" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="e38f00d1-d9b0-4a7b-af11-fb0c9369848c" variableName="TransID" />
+			<set-variable value="429" doc:name="https status 429" doc:id="a1aa9d41-822d-4ec4-b036-99f3ac59cd57" variableName="httpStatus" />
+			<set-variable value="Too Many Request" doc:name="Set error message" doc:id="00385c59-90e8-49fb-966c-eea2a424e50e" variableName="errorMessage" />
+			<set-variable value="Too many request recieved." doc:name="Set error Description" doc:id="8224928b-5611-4589-912a-2f5558ca0c9a" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="8cb9d21e-6691-48aa-b209-46bfd27baede" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="143f3066-49d9-4dec-afc2-451f13f67b5f" type="HTTP:BAD_GATEWAY" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="27b64db1-fadd-4cfd-8212-157e35a00524" variableName="TransID" />
+			<set-variable value="502" doc:name="https status 502" doc:id="67141929-a550-4b6a-9676-d1a9989acb87" variableName="httpStatus" />
+			<set-variable value="Bad Gateway" doc:name="Set error message" doc:id="1bb5ea2f-ca33-4ff0-9b50-bf8d7c127573" variableName="errorMessage" />
+			<set-variable value="Bad Gateway Type" doc:name="Set error Description" doc:id="f7ebb996-8ff0-47ca-a08c-61578695bc3e" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="03476706-8515-4216-a5e3-baffbf6441a2" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bee5361d-06f6-42fe-a578-9011eb613d98" type="HTTP:GATEWAY_TIMEOUT" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="39e4e538-9340-4117-8e09-49e775d30b8c" variableName="TransID" />
+			<set-variable value="504" doc:name="https status 504" doc:id="4dd822de-82db-4ac4-b1e4-5cd24d97874f" variableName="httpStatus" />
+			<set-variable value="Gateway Timeout" doc:name="Set error message" doc:id="6b77cac0-fc29-4f76-90ed-0235ce1d7f73" variableName="errorMessage" />
+			<set-variable value="Gateway has been timeout" doc:name="Set error Description" doc:id="f2300882-4356-454d-91e2-9016c966e2e6" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="e2f56830-ef0c-43ca-b0da-fe71c42fd9a6" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e41c5823-ad17-48ab-9e6e-a06e6d8e8900" type="HTTP:SERVICE_UNAVAILABLE" >
+			<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="set transactionID" doc:id="c13fe0de-3429-43fb-add2-e4d18ae0fef4" variableName="TransID" />
+			<set-variable value="503" doc:name="https status 503" doc:id="d942dac0-d57e-4e3f-a2aa-860a671c40eb" variableName="httpStatus" />
+			<set-variable value="Service unavailable" doc:name="Set error message" doc:id="2f1d72f6-3d5b-4dac-a83b-765ef11c69fd" variableName="errorMessage" />
+			<set-variable value="Service is currently unavailable" doc:name="Copy_of_Set error Description" doc:id="d28ae47c-a68a-4158-b2f1-7afda38b6976" variableName="errorDescription" />
+			<flow-ref doc:name="Global-error-message" doc:id="72b4df1e-d895-4379-968c-4e05f4e67783" name="global-error-handlerSub_Flow" />
+		</on-error-propagate>
+		<on-error-propagate type="RETRY_EXHAUSTED" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="eecf5b78-aa00-40be-ba1b-12eade9b1c0b" >
+			<set-variable value="#[503]" doc:name="Set HTTP Status - 503" doc:id="0cfd10c4-12c7-49a6-910e-2184cc7e7905" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="f689e130-98ab-4653-9524-a1cb75eb64ef" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="REDELIVERY_EXHAUSTED" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="291817fb-d4ce-49ba-90e6-edc01a8e010a" >
+			<set-variable value="#[503]" doc:name="Set HTTP Status - 503" doc:id="6eab01aa-abee-4ec7-af7d-03f38c71fdd5" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="7b84d72c-8244-45a1-b6f5-46fd46be82bf" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="CONNECTIVITY" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d3c96fbd-1725-43a2-befe-6eb7b735a250" >
+			<set-variable value="#[503]" doc:name="Set HTTP Status - 503" doc:id="b2b05b5f-11f1-4b5c-b7a2-7386c37d8014" variableName="httpStatus" />
+      			<set-variable value="Service unavailable" doc:name="Set vErrorMessage" doc:id="d869ae46-0469-4819-b511-274c7894943d" variableName="errorMessage"/>
+			<set-variable value="The (upstream) service is temporarily not available " doc:name="Set vErrorDescription" doc:id="f9c654f4-cbd2-4796-b1b3-346829905b54" variableName="errorDescription"/>
+			<flow-ref doc:name="Global-error-message" doc:id="aba0617b-3177-4546-a336-b3b2a91acd74" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="TIMEOUT" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8d19602b-d4a5-4a9f-bbf5-c04321385074" >
+			<set-variable value="#[504]" doc:name="Set HTTP Status - 504" doc:id="8320495c-9b92-4474-8de7-78d7096e6ca8" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="e60d2b7e-c59e-43fc-a773-e0264d422bca" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<!-- Generic CONNECTIVITY Exception handling end -->
+		
+		<on-error-propagate type="TRANSFORMATION" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="80938c09-3273-4ba7-a642-584a1c63971c" >
+			<set-variable value="#[400]" doc:name="Set HTTP Status - 400" doc:id="56031633-3eb6-43ff-9b84-4533bf5fac56" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="a3feccc3-558f-47de-bf36-b0f69ea08b41" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="EXPRESSION" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5059fbd9-a019-4a28-a316-3261db3e9db2" >
+			<set-variable value="#[500]" doc:name="Set HTTP Status - 500" doc:id="d70cf76b-4c09-4723-9388-988a01d4c911" variableName="httpStatus" />
+			<flow-ref doc:name="Global-error-message" doc:id="4eb7cd0b-6f4b-4464-8df9-41e80ef82660" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>	
+		<on-error-propagate type="ROUTING" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="cfc8ce0c-1b64-4fe9-9152-ffbeec04a47f" >
+			<set-variable value="#[400]" doc:name="Set HTTP Status - 400" doc:id="2bcb7282-f282-4822-8cad-6da30194d261" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="dce57860-4f56-471e-a15c-ad51d0b2e52c" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<on-error-propagate type="SECURITY" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="57c2f9ed-f634-4b00-84c6-68187d91db72" >
+			<set-variable value="#[401]" doc:name="Set HTTP Status - 401" doc:id="f4e8bff5-9ea5-40ce-a32f-9821310dd2b2" variableName="httpStatus" />
+      			<flow-ref doc:name="Global-error-message" doc:id="e4f68398-da2e-4849-85ca-2766c9b6cfa9" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+		<!-- If none of the above matches then handle a the exception using generic handler -->
+		<on-error-propagate type="ANY" enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="1eaac816-cffa-41c5-ad3b-a2a14879ba08">
+			<set-variable value="#[500]" doc:name="Set HTTP Status - 500" variableName="httpStatus"/>
+			<set-variable value="Internal server error" doc:name="Set Error Message" doc:id="22fea9f2-a0d9-4f84-8fd9-1696e44b3e97" variableName="errorMessage"/>
+			<set-variable value="The server encountered an unexpected condition which prevented it from fulfilling the request" doc:name="errorDescription" doc:id="7c73f85b-3d0f-4fd7-859f-e29528700649" variableName="errorDescription"/>
+			<flow-ref doc:name="Global-error-message" doc:id="97a38953-974b-4a25-a1a5-b61ea0461eb4" name="global-error-handlerSub_Flow"/>
+		</on-error-propagate>
+	
+</error-handler>
+	<sub-flow name="global-error-handlerSub_Flow" doc:id="48a062cf-6c98-44e5-a1fa-6df18b77b24b" >
+		<ee:transform doc:name="Error descritption" doc:id="422fd753-7ee7-426b-890c-b26ed5bed5ac">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var errors = (((error.description default "" replace "Error validating JSON. Error: - " with "") replace "- " with "") splitBy "\n")
+---
+{
+	code: vars.httpStatus,
+	message: if (vars.errorMessage != null) vars.errorMessage else (error.errorType.identifier) ,
+	Description: if (vars.errorDescribe != null) vars.errorDescribe else (vars.errorDescription) ,
+	dateTime: now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"},
+	transactionID : vars.TransID
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Error Log" doc:id="97ee4c39-12af-4280-a6e3-4f14bf991328" message="Transaction [#[vars.TransID]] - Error Code [#[vars.httpStatus]] - Error Message [#[error.errorType.identifier default '']] - Error Description [#[error.description default '']]"/>
+	</sub-flow>
+
+</mule>

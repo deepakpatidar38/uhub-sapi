@@ -1,0 +1,31 @@
+%dw 2.0
+
+type auto_fb325ac8_97bc_4fc4_a6ce_1c14c808be27_Input_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|
+    client_id: String, 
+    client_secret: String, 
+    "x-correlation-id"?: String, 
+    "x-transaction-id"?: String
+  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|
+    environment: "uho-dev-uhub-sapi.us-e2.cloudhub.io" | "uho-test-uhub-sapi.us-e2.cloudhub.io" | "uho-prod-uhub-sapi.us-e2.cloudhub.io" | "uho-uat-uhub-sapi.us-e2.cloudhub.io", 
+    nationaIDl: String
+  |}, 
+  version: String, 
+  localAddress: String
+|}
+

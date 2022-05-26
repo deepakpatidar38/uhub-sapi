@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="post:\cases:application\json:uhub-sapi-config" doc:id="15d1f137-176f-4f2b-a697-6cd19f420bbe">
+        <set-variable value="#[correlationId default '']" doc:name="Set correlationId" doc:id="6343c7b1-a10e-46e1-ac93-1287f3712354" variableName="correlationId"/>
+		<set-variable value='#[attributes.headers."postman-token" default ""]' doc:name="SetTransactionID" doc:id="8c5e823c-caa4-4200-bf8b-2e01022548e3" variableName="transactionID"/>
+		<logger level="INFO" doc:name="Start Log" doc:id="b9ee216a-4a44-4cf9-acad-d24be0fa03d3" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Before insert case database call", payload: #[payload]'/>
+		<ee:transform doc:name="Transform Message" doc:id="e7283151-e918-4b1f-b513-040e401d9447" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+var currentDate = now() as String { format: "yyyy-MM-dd" }
+---
+{
+	source: payload.source,
+	case_type: payload.caseType,
+	first_name: payload.firstName,
+	last_name: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	date_of_birth: payload.dateOfBirth as String {format: "yyyy-MM-dd"},
+	national_id: payload.nationalID,
+	national_id_type: payload.nationalIDType,
+	street_address: payload.address.streetAddress,
+	city: payload.address.city,
+	state: upper(payload.address.state),
+	postal: payload.address.postal,
+	country: payload.address.country,
+	create_date: currentDate,
+	update_date: currentDate,
+	create_by: "UHIS",	
+	update_by: "UHIS"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="insert-covid-case-sub-flow" doc:id="1edd9ef7-29ae-4c6e-8d1b-5fbf07b5a11e" name="insert-covid-case-sub-flow"/>
+		<ee:transform doc:id="fad3246a-9c2f-457b-b9d8-34f792c9d890">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  caseID: payload.generatedKeys[0]
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	</mule>
