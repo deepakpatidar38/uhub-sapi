@@ -161,7 +161,6 @@
 			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
 			<artifactId>common-data-types</artifactId>
 			<version>1.0.0</version>
-			<name>common-data-types</name>
 			<classifier>raml-fragment</classifier>
 			<type>zip</type>
 		</dependency>
