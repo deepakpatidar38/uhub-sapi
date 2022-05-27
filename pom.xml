@@ -160,20 +160,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.29</version>
 		</dependency>
-		<dependency>
-			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
-			<artifactId>uhub-sapi</artifactId>
-			<version>1.0.1</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
-			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
-			<artifactId>common-data-types</artifactId>
-			<version>1.0.0</version>
-			<classifier>raml-fragment</classifier>
-			<type>zip</type>
-		</dependency>
 	</dependencies>
 
 	<repositories>
