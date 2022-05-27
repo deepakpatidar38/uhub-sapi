@@ -157,6 +157,14 @@
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
+		<dependency>
+			<groupId>281e031a-4c5d-4dad-88c2-2f2046617097</groupId>
+			<artifactId>common-data-types</artifactId>
+			<version>1.0.0</version>
+			<name>common-data-types</name>
+			<classifier>raml-fragment</classifier>
+			<type>zip</type>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -172,6 +180,13 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+			<id>anypoint-exchange</id>
+			<name>MuleSoft Releases Repository</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+			<layout>default</layout>
+		</repository>
+		
 	</repositories>
 
 	<pluginRepositories>
